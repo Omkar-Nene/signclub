@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignClub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 400px;
+            height: 600px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-y: auto;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: white;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .tab:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .tab.active:hover {
+            background: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Create Signature Tab */
+        #canvas-container {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background: #fafafa;
+            cursor: crosshair;
+            position: relative;
+        }
+
+        #signatureCanvas {
+            display: block;
+            border-radius: 8px;
+        }
+
+        .canvas-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #999;
+            font-size: 14px;
+            pointer-events: none;
+            text-align: center;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        /* Saved Signatures Tab */
+        .signatures-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .signature-item {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .signature-preview {
+            width: 100%;
+            height: 80px;
+            background: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .signature-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .signature-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .signature-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .signature-date {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .signature-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        /* Instructions */
+        .instructions {
+            background: #f0f7ff;
+            border-left: 3px solid #667eea;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .instructions strong {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✍️ SignClub</h1>
+            <p class="subtitle">Digital Signature Creator</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="create">Create</button>
+            <button class="tab" data-tab="saved">Saved</button>
+        </div>
+
+        <!-- Create Signature Tab -->
+        <div id="create" class="tab-content active">
+            <div class="card">
+                <div class="instructions">
+                    <strong>Tip:</strong> Draw your signature below, save it, then right-click on any PDF or Google Doc to insert it!
+                </div>
+
+                <div id="canvas-container">
+                    <canvas id="signatureCanvas" width="300" height="120"></canvas>
+                    <div class="canvas-placeholder" id="canvasPlaceholder">
+                        Draw your signature here
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-secondary" id="clearBtn">Clear</button>
+                    <button class="btn btn-secondary" id="undoBtn">Undo</button>
+                </div>
+
+                <div class="input-group">
+                    <label for="signatureName">Signature Name</label>
+                    <input type="text" id="signatureName" placeholder="e.g., Work Signature" />
+                </div>
+
+                <button class="btn btn-primary" id="saveBtn">Save Signature</button>
+            </div>
+        </div>
+
+        <!-- Saved Signatures Tab -->
+        <div id="saved" class="tab-content">
+            <div class="card">
+                <div class="signatures-list" id="signaturesList">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <p>No saved signatures yet</p>
+                        <p style="font-size: 12px; margin-top: 5px;">Create one in the Create tab!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

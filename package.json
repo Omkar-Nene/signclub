@@ -1,0 +1,17 @@
+{
+  "name": "quick_sign_app",
+  "version": "1.0.0",
+  "description": "QuickSign is a signature creation app MVP for creating digital signature images that can be used when required",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^7.1.12"
+  }
+}
